@@ -25,7 +25,7 @@ services:
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
     volumes:
-      - ${MEDIA_ROOT}/Downloads:/media/downloads # downloads folder
+      - ${MEDIA_ROOT}/Downloads:/media/Downloads # downloads folder
       - ${CONFIG_ROOT}/deluge:/config # config files
 
   jackett:
@@ -39,7 +39,7 @@ services:
       - TZ=${TZ} # timezone, defined in .env
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${MEDIA_ROOT}/Downloads/torrent-blackhole:/media/downloads/torrent-blackhole # place where to put .torrent files for manual download
+      - ${MEDIA_ROOT}/Downloads/torrent-blackhole:/media/Downloads/torrent-blackhole # place where to put .torrent files for manual download
       - ${CONFIG_ROOT}/jackett:/config # config files
 
   sonarr:
@@ -54,9 +54,21 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${CONFIG_ROOT}/sonarr:/config # config files
-      - ${MEDIA_ROOT}/TV Shows:/media/TV Shows # tv shows folder
-      - ${MEDIA_ROOT}/Downloads/completed:/media/downloads/completed # download folder
-      - ${MEDIA_ROOT}/Downloads/trash:/media/downloads/trash # trash folder
+      - ${MEDIA_ROOT}:/media
+  
+  lidarr:
+    container_name: lidarr
+    image: linuxserver/lidarr:latest
+    restart: always
+    network_mode: host
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${CONFIG_ROOT}/lidarr:/config # config files
+      - ${MEDIA_ROOT}:/media
 
   radarr:
     container_name: radarr
@@ -70,9 +82,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${CONFIG_ROOT}/radarr:/config # config files
-      - ${MEDIA_ROOT}/Movies:/media/Movies # movies folder
-      - ${MEDIA_ROOT}/Downloads/completed:/media/downloads/completed # download folder
-      - ${MEDIA_ROOT}/Downloads/trash:/media/downloads/trash # trash folder
+      - ${MEDIA_ROOT}:/media
 
   bazarr:
     container_name: bazarr
@@ -86,7 +96,6 @@ services:
       - UMASK_SET=022 #optional
     volumes:
       - ${CONFIG_ROOT}/bazarr:/config # config files
-      - ${MEDIA_ROOT}/Movies:/media/Movies # movies folder
-      - ${MEDIA_ROOT}/TV Shows:/media/TV Shows # tv shows folder
+      - ${MEDIA_ROOT}:/media
     ports:
       - 6767:6767
